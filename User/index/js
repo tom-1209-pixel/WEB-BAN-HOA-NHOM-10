@@ -19,7 +19,6 @@ function init() {
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
     createParticles();
-h
     animate();
 }
 
