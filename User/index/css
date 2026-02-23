@@ -1,55 +1,106 @@
-body { 
-    margin: 0; 
-    overflow-x: hidden; 
-    background-color: #000; 
-    color: white; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+:root{
+--font-heading:'Playfair Display',serif;
+--font-body:'Inter',sans-serif;
 }
 
-#canvas-container { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    z-index: -1; 
-    width: 100%; 
-    height: 100%; 
+body{
+margin:0;
+overflow-x:hidden;
+color:white;
+font-family:var(--font-body);
+background:radial-gradient(circle at top,#1a0f1f,#0a0710 60%,#050308);
 }
 
-.navbar { 
-    background: rgba(0,0,0,0.8) !important; 
-    backdrop-filter: blur(5px); 
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+/* 3D background */
+#canvas-container{
+position:fixed;
+inset:0;
+z-index:0;
+pointer-events:none;
 }
 
-.hero-section { 
-    height: 100vh; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    text-align: center; 
-    background: rgba(0,0,0,0.2); 
+.navbar,main{
+position:relative;
+z-index:2;
 }
 
-.glass-card { 
-    background: rgba(255, 255, 255, 0.1); 
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    transition: all 0.3s ease;
+.navbar{
+background:rgba(0,0,0,.7)!important;
+backdrop-filter:blur(8px);
 }
 
-.glass-card:hover { 
-    transform: translateY(-10px); 
-    background: rgba(255, 255, 255, 0.15); 
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+h1,h2,h3,h4,h5,.navbar-brand{
+font-family:var(--font-heading);
 }
 
-.price { 
-    color: #ff69b4; 
-    font-weight: bold; 
-    font-size: 1.2rem; 
+main{padding-top:90px;}
+
+/* HERO */
+.hero-section{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:flex-start;
+text-align:left;
 }
 
-.form-control::placeholder { color: rgba(255,255,255,0.5); }
-.form-control:focus { background: rgba(255,255,255,0.2); color: white; }
+.hero-section h1{
+font-size:clamp(3rem,6vw,5rem);
+}
+
+/* BUTTON */
+.btn-primary{
+background:linear-gradient(135deg,#ff9ecb,#ff69b4);
+border:none;
+box-shadow:0 0 20px rgba(255,105,180,.4);
+transition:.3s;
+}
+
+.btn-primary:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 25px rgba(255,105,180,.6);
+}
+
+/* GLASS */
+.glass-card{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(14px);
+border-radius:16px;
+border:1px solid rgba(255,182,193,.25);
+transition:.35s;
+}
+
+.glass-card:hover{
+transform:translateY(-10px);
+box-shadow:
+0 10px 30px rgba(255,182,193,.25),
+0 0 40px rgba(255,105,180,.15);
+}
+
+.price{
+color:#ffb6c1;
+font-weight:bold;
+}
+
+/* 3D viewer */
+.viewer3d{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.85);
+backdrop-filter:blur(10px);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+transition:.4s;
+}
+
+.viewer3d.hidden{
+opacity:0;
+pointer-events:none;
+}
+
+#viewer3d-canvas{
+width:60vw;
+height:60vh;
+}
