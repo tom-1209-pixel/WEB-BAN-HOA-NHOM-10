@@ -1,0 +1,81 @@
+/* Đặt nền cho trang login */
+body.login-page {
+  background: linear-gradient(135deg, #e8f0e4, #cfd9df); /* xanh pastel + xám nhạt */
+  font-family: "Segoe UI", Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Hộp login */
+.login-box {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 350px;
+  text-align: center;
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+  color: #6ab187; /* xanh lá pastel */
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #6ab187;
+}
+
+/* Nút đăng nhập */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #6ab187;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #4f8a65; /* xanh lá đậm hơn khi hover */
+}
+
+/* Thông báo lỗi */
+.error {
+  color: #d9534f; /* đỏ nhạt */
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Hint demo */
+.hint {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #555;
+}

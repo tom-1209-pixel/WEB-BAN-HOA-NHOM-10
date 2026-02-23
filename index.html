@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <div class="container">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <ul>
+          <li><a href="index.html">🏠 Trang chủ</a></li>
+          <li><a href="users/users.html">👤 Quản lý khách hàng</a></li>
+          <li><a href="categories/list.html">🌸 Quản lý loại sản phẩm</a></li>
+          <li><a href="products/list.html">🌹 Quản lý sản phẩm</a></li>
+          <li><a href="imports/list.html">📦 Quản lý nhập hàng</a></li>
+          <li><a href="orders/list.html">📑 Quản lý đơn hàng</a></li>
+          <li><a href="reports/inventory.html">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTENT -->
+      <main class="content">
+        <div class="stats">
+          <div class="card">
+            <h3>Tổng sản phẩm</h3>
+            <p id="totalProducts">0</p>
+          </div>
+
+          <div class="card">
+            <h3>Đơn hàng hôm nay</h3>
+            <p id="todayOrders">0</p>
+          </div>
+
+          <div class="card">
+            <h3>Sắp hết hàng</h3>
+            <p id="lowStock">0</p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
