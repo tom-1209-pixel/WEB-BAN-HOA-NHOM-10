@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý tồn kho & Báo cáo</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/forms-tables.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="../logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <ul>
+          <li><a href="../index.html">🏠 Trang chủ</a></li>
+          <li><a href="../users/users.html">👤 Quản lý khách hàng</a></li>
+          <li><a href="../prices/prices.html">💰 Quản lý giá bán</a></li>
+          <li><a href="../products/products.html">🌹 Quản lý sản phẩm</a></li>
+          <li><a href="../imports/imports.html">📦 Quản lý nhập hàng</a></li>
+          <li><a href="../orders/orders.html">📑 Quản lý đơn hàng</a></li>
+          <li><a href="reports.html" class="active">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTENT -->
+      <main class="content">
+        <h2>📊 Quản lý tồn kho & Báo cáo</h2>
+
+        <!-- Menu chức năng -->
+        <div class="menu-box">
+          <button onclick="showReportSection('checkStock')">
+            🔍 Tra cứu tồn kho
+          </button>
+          <button onclick="showReportSection('reportInOut')">
+            📈 Báo cáo nhập–xuất
+          </button>
+          <button onclick="showReportSection('lowStockAlert')">
+            ⚠️ Cảnh báo hết hàng
+          </button>
+        </div>
+
+        <!-- Nội dung động -->
+        <div id="reportContent">
+          <p class="default-message">
+            👉 Vui lòng chọn một chức năng để quản lý tồn kho và báo cáo.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function showReportSection(section) {
+        const content = document.getElementById("reportContent");
+
+        if (section === "checkStock") {
+          content.innerHTML = `
+          <h3>🔍 Tra cứu tồn kho</h3>
+          <form class="form-box">
+            <div><label>Loại sản phẩm:</label><input type="text" placeholder="Nhập tên loại sản phẩm" required></div>
+            <div><label>Thời điểm cần tra cứu:</label><input type="date" required></div>
+            <button type="submit">Tra cứu</button>
+            <button type="reset">Hủy</button>
+          </form>
+          <p class="default-message">👉 Kết quả sẽ hiển thị số lượng tồn tại thời điểm đã chọn.</p>
+        `;
+        } else if (section === "lowStockAlert") {
+          content.innerHTML = `
+          <h3>⚠️ Cảnh báo sản phẩm sắp hết hàng</h3>
+          <form class="form-box">
+            <div><label>Sản phẩm:</label><input type="text" placeholder="Nhập tên sản phẩm" required></div>
+            <div><label>Ngưỡng cảnh báo (số lượng):</label><input type="number" min="1" required></div>
+            <button type="submit">Đặt cảnh báo</button>
+            <button type="reset">Hủy</button>
+          </form>
+          <p class="default-message">👉 Hệ thống sẽ cảnh báo khi số lượng tồn kho của sản phẩm nhỏ hơn ngưỡng đã chỉ định.</p>
+        `;
+        }
+      }
+    </script>
+  </body>
+</html>

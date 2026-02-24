@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý giá bán</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/forms-tables.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="../logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <ul>
+          <li><a href="../index.html">🏠 Trang chủ</a></li>
+          <li><a href="../users/users.html">👤 Quản lý khách hàng</a></li>
+          <li><a href="prices.html" class="active">💰 Quản lý giá bán</a></li>
+          <li><a href="../products/products.html">🌹 Quản lý sản phẩm</a></li>
+          <li><a href="../imports/imports.html">📦 Quản lý nhập hàng</a></li>
+          <li><a href="../orders/orders.html">📑 Quản lý đơn hàng</a></li>
+          <li><a href="../reports/reports.html">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTENT -->
+      <main class="content">
+        <h2>💰 Quản lý giá bán</h2>
+
+        <!-- Menu chức năng -->
+        <div class="menu-box">
+          <button onclick="showPriceSection('profitRate')">
+            📈 Nhập / Sửa % lợi nhuận
+          </button>
+          <button onclick="showPriceSection('lookupPrice')">
+            🔍 Tra cứu giá theo phiếu nhập
+          </button>
+        </div>
+
+        <!-- Nội dung động -->
+        <div id="priceContent">
+          <p class="default-message">
+            👉 Vui lòng chọn một chức năng để quản lý giá bán.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function showPriceSection(section) {
+        const content = document.getElementById("priceContent");
+
+        if (section === "profitRate") {
+          content.innerHTML = `
+          <h3>📈 Nhập / Sửa tỉ lệ % lợi nhuận theo sản phẩm</h3>
+          <form class="form-box">
+            <div><label>Mã sản phẩm:</label><input type="text" required></div>
+            <div><label>Tên sản phẩm:</label><input type="text" required></div>
+            <div><label>Tỉ lệ lợi nhuận (%):</label><input type="number" min="0" required></div>
+            <button type="submit">Lưu thay đổi</button>
+            <button type="reset">Hủy</button>
+          </form>
+          <p class="default-message">👉 Hệ thống sẽ tính giá bán dựa trên giá vốn và % lợi nhuận.</p>
+        `;
+        } else if (section === "lookupPrice") {
+          content.innerHTML = `
+          <h3>🔍 Tra cứu giá vốn, % lợi nhuận, giá bán theo phiếu nhập</h3>
+          <form class="form-box">
+            <div><label>Mã phiếu nhập:</label><input type="text" required></div>
+            <div><label>Mã sản phẩm:</label><input type="text" required></div>
+            <button type="submit">Tra cứu</button>
+            <button type="reset">Hủy</button>
+          </form>
+          <p class="default-message">👉 Kết quả sẽ hiển thị giá vốn, % lợi nhuận hiện tại và giá bán của sản phẩm theo phiếu nhập.</p>
+        `;
+        }
+      }
+    </script>
+  </body>
+</html>

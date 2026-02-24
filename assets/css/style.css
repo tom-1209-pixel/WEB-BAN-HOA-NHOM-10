@@ -170,9 +170,7 @@ body {
 
 /* Khu vực hiển thị nội dung động */
 #userContent {
-  background-color: #fff;
-  padding: 25px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  min-height: 300px;   /* đảm bảo vùng hiển thị đủ lớn */
+  margin-top: 10px;
+  font-style: italic;
+  color: #555;
 }

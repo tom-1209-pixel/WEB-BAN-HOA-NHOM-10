@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý sản phẩm</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/forms-tables.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="../logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <ul>
+          <li><a href="../index.html">🏠 Trang chủ</a></li>
+          <li><a href="../users/users.html">👤 Quản lý khách hàng</a></li>
+          <li><a href="../prices/prices.html">💰 Quản lý giá bán</a></li>
+          <li>
+            <a href="products.html" class="active">🌹 Quản lý sản phẩm</a>
+          </li>
+          <li><a href="../imports/imports.html">📦 Quản lý nhập hàng</a></li>
+          <li><a href="../orders/orders.html">📑 Quản lý đơn hàng</a></li>
+          <li><a href="../reports/reports.html">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTENT -->
+      <main class="content">
+        <h2>🌹 Quản lý sản phẩm</h2>
+
+        <!-- Menu chức năng -->
+        <div class="menu-box">
+          <button onclick="showSection('listProduct')">
+            📋 Danh sách sản phẩm
+          </button>
+          <button onclick="showSection('addCategory')">
+            ➕ Thêm loại sản phẩm
+          </button>
+          <button onclick="showSection('addProduct')">➕ Thêm sản phẩm</button>
+          <button onclick="showSection('editProduct')">✏️ Sửa sản phẩm</button>
+          <button onclick="showSection('deleteProduct')">
+            🗑️ Xóa sản phẩm
+          </button>
+        </div>
+
+        <!-- Nội dung động -->
+        <div id="productContent">
+          <p class="default-message">
+            👉 Vui lòng chọn một chức năng để quản lý sản phẩm.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function showSection(section) {
+        const content = document.getElementById("productContent");
+
+        if (section === "listProduct") {
+          // 👉 Không thực hiện gì, giữ nguyên thông báo mặc định
+          return;
+        } else if (section === "addCategory") {
+          content.innerHTML = `
+        <h3>➕ Thêm loại sản phẩm</h3>
+        <form class="form-box">
+          <div><label>Tên loại sản phẩm:</label><input type="text" required></div>
+          <div><label>Mô tả:</label><textarea></textarea></div>
+          <button type="submit">Thêm loại</button>
+          <button type="reset">Hủy</button>
+        </form>
+      `;
+        } else if (section === "addProduct") {
+          content.innerHTML = `
+        <h3>➕ Thêm sản phẩm</h3>
+        <form class="form-box">
+          <div><label>Mã sản phẩm:</label><input type="text" required></div>
+          <div><label>Tên sản phẩm:</label><input type="text" required></div>
+          <div><label>Loại sản phẩm:</label>
+            <select><option>Hoa hồng</option><option>Hoa lan</option></select>
+          </div>
+          <div><label>Mô tả:</label><textarea></textarea></div>
+          <div><label>Đơn vị tính:</label><input type="text"></div>
+          <div><label>Số lượng ban đầu:</label><input type="number" min="0"></div>
+          <div><label>Hình ảnh:</label><input type="file" accept="image/*"></div>
+          <div><label>Tỉ lệ lợi nhuận mong muốn (%):</label><input type="number" min="0"></div>
+          <div><label>Nhà cung cấp:</label><input type="text"></div>
+          <div><label>Hiện trạng:</label>
+            <select>
+              <option value="hidden">Ẩn (không bán)</option>
+              <option value="visible">Hiển thị (đang bán)</option>
+            </select>
+          </div>
+          <button type="submit">Thêm sản phẩm</button>
+          <button type="reset">Hủy</button>
+        </form>
+      `;
+        } else if (section === "editProduct") {
+          content.innerHTML = `
+        <h3>✏️ Sửa sản phẩm</h3>
+        <form class="form-box">
+          <div><label>Mã sản phẩm:</label><input type="text" value="SP001" readonly></div>
+          <div><label>Tên sản phẩm:</label><input type="text" value="Hoa hồng đỏ"></div>
+          <div><label>Mô tả:</label><textarea>Hoa hồng đỏ tươi đẹp</textarea></div>
+          <div><label>Đơn vị tính:</label><input type="text" value="Bó"></div>
+          <div><label>Số lượng hiện tại:</label><input type="number" value="50"></div>
+          <div><label>Hình ảnh:</label><input type="file" accept="image/*"></div>
+          <div><label>Hiện trạng:</label>
+            <select>
+              <option value="hidden">Ẩn (không bán)</option>
+              <option value="visible" selected>Hiển thị (đang bán)</option>
+            </select>
+          </div>
+          <button type="submit">Lưu thay đổi</button>
+          <button type="reset">Hủy</button>
+        </form>
+      `;
+        } else if (section === "deleteProduct") {
+          content.innerHTML = `
+        <h3>🗑️ Xóa sản phẩm</h3>
+        <p>👉 Nếu sản phẩm chưa nhập hàng thì xóa hẳn trong CSDL, ngược lại sẽ đánh dấu ẩn sản phẩm trên website.</p>
+        <form class="form-box">
+          <div><label>Mã sản phẩm cần xóa:</label><input type="text" required></div>
+          <button type="submit">Xóa sản phẩm</button>
+          <button type="reset">Hủy</button>
+        </form>
+      `;
+        }
+      }
+    </script>
+  </body>
+</html>

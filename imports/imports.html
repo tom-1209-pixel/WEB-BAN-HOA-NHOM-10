@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý nhập hàng</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/forms-tables.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="../logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <ul>
+          <li><a href="../index.html">🏠 Trang chủ</a></li>
+          <li><a href="../users/users.html">👤 Quản lý khách hàng</a></li>
+          <li><a href="../prices/prices.html">💰 Quản lý giá bán</a></li>
+          <li><a href="../products/products.html">🌹 Quản lý sản phẩm</a></li>
+          <li>
+            <a href="imports.html" class="active">📦 Quản lý nhập hàng</a>
+          </li>
+          <li><a href="../orders/orders.html">📑 Quản lý đơn hàng</a></li>
+          <li><a href="../reports/reports.html">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTENT -->
+      <main class="content">
+        <h2>📦 Quản lý nhập hàng</h2>
+
+        <!-- Menu chức năng -->
+        <div class="menu-box">
+          <button onclick="showImportSection('listImport')">
+            📋 Danh sách phiếu nhập
+          </button>
+          <button onclick="showImportSection('addImport')">
+            ➕ Tạo phiếu nhập
+          </button>
+          <button onclick="showImportSection('editImport')">
+            ✏️ Sửa phiếu nhập
+          </button>
+          <button onclick="showImportSection('completeImport')">
+            ✅ Hoàn thành phiếu nhập
+          </button>
+        </div>
+
+        <!-- Nội dung động -->
+        <div id="importContent">
+          <p class="default-message">
+            👉 Vui lòng chọn một chức năng để quản lý nhập hàng.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function showImportSection(section) {
+        const content = document.getElementById("importContent");
+
+        if (section === "listImport") {
+          // 👉 Không thực hiện gì, giữ nguyên thông báo mặc định
+          return;
+        } else if (section === "addImport") {
+          content.innerHTML = `
+          <h3>➕ Tạo phiếu nhập hàng</h3>
+          <form class="form-box">
+            <div><label>Ngày nhập:</label><input type="date" required></div>
+            <div><label>Lần nhập:</label><input type="number" min="1" required></div>
+            <div><label>Sản phẩm:</label>
+              <input type="text" placeholder="Tìm kiếm sản phẩm để nhập" required>
+            </div>
+            <div><label>Số lượng nhập:</label><input type="number" min="1" required></div>
+            <div><label>Giá nhập:</label><input type="number" min="0" required></div>
+            <button type="submit">Tạo phiếu nhập</button>
+            <button type="reset">Hủy</button>
+          </form>
+        `;
+        } else if (section === "editImport") {
+          content.innerHTML = `
+          <h3>✏️ Sửa phiếu nhập kho</h3>
+          <p>👉 Chỉ có thể sửa phiếu nhập trước khi hoàn thành.</p>
+          <form class="form-box">
+            <div><label>Tìm kiếm phiếu nhập:</label><input type="text" placeholder="Nhập mã phiếu hoặc ngày nhập" required></div>
+            <div><label>Ngày nhập:</label><input type="date"></div>
+            <div><label>Lần nhập:</label><input type="number" min="1"></div>
+            <div><label>Sản phẩm:</label><input type="text" placeholder="Tìm sản phẩm"></div>
+            <div><label>Số lượng nhập:</label><input type="number" min="1"></div>
+            <div><label>Giá nhập:</label><input type="number" min="0"></div>
+            <button type="submit">Lưu thay đổi</button>
+            <button type="reset">Hủy</button>
+          </form>
+        `;
+        } else if (section === "completeImport") {
+          content.innerHTML = `
+          <h3>✅ Hoàn thành phiếu nhập kho</h3>
+          <form class="form-box">
+            <div><label>Tìm kiếm phiếu nhập cần hoàn thành:</label><input type="text" placeholder="Nhập mã phiếu hoặc ngày nhập" required></div>
+            <button type="submit">Hoàn thành phiếu nhập</button>
+            <button type="reset">Hủy</button>
+          </form>
+        `;
+        }
+      }
+    </script>
+  </body>
+</html>

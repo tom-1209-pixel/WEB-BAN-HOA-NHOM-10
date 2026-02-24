@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thêm tài khoản khách hàng</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/addAccount.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <h2>🌸 Flower Shop Admin</h2>
+    <div class="admin-info">
+      Xin chào, <strong id="adminName">Admin</strong> |
+      <a href="../logout.html">Đăng xuất</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- CONTENT -->
+    <main class="content">
+      <h2>➕ Thêm tài khoản khách hàng</h2>
+
+      <!-- Form đăng ký -->
+      <form id="addAccountForm" class="form-box">
+        <div class="form-group">
+          <label for="username">Tên tài khoản:</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Mật khẩu:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Nhập lại mật khẩu:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required>
+          <!-- Thông báo lỗi ngay dưới ô nhập lại mật khẩu -->
+          <small id="passwordError" style="color:red; display:none;"></small>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">Tạo tài khoản</button>
+          <button type="button" onclick="goBack()">⬅️ Quay lại</button>
+        </div>
+      </form>
+
+      <div id="result"></div>
+    </main>
+  </div>
+
+  <script>
+    // Nút quay lại về trang users.html
+    function goBack() {
+      window.location.href = "../users/users.html";
+    }
+
+    // Xử lý submit form
+    document.getElementById("addAccountForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const errorMsg = document.getElementById("passwordError");
+
+      // Kiểm tra mật khẩu nhập lại
+      if (password !== confirmPassword) {
+        errorMsg.style.display = "block";
+        errorMsg.textContent = "❌ Mật khẩu nhập lại không khớp!";
+        return;
+      } else {
+        errorMsg.style.display = "none";
+      }
+
+      // Nếu mật khẩu khớp, giả sử gửi dữ liệu lên API
+      const accountData = { username, password };
+
+      // Hiện thông báo thành công (sau này sẽ thay bằng gọi API thật)
+      document.getElementById("result").innerHTML = `<p style="color:green">✅ Tạo tài khoản thành công cho ${accountData.username}!</p>`;
+      document.getElementById("addAccountForm").reset();
+    });
+  </script>
+</body>
+</html>

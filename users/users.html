@@ -1,52 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <title>Quản lý khách hàng</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/users.css">
-</head>
-<body>
-  <!-- HEADER -->
-  <header class="header">
-    <h2>🌸 Flower Shop Admin</h2>
-    <div class="admin-info">
-      Xin chào, <strong id="adminName">Admin</strong> |
-      <a href="../logout.html">Đăng xuất</a>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý khách hàng</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/forms-tables.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="../logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <ul>
+          <li><a href="../index.html">🏠 Trang chủ</a></li>
+          <li><a href="users.html" class="active">👤 Quản lý khách hàng</a></li>
+          <li><a href="../prices/prices.html">💰 Quản lý giá bán</a></li>
+          <li><a href="../products/products.html">🌹 Quản lý sản phẩm</a></li>
+          <li><a href="../imports/imports.html">📦 Quản lý nhập hàng</a></li>
+          <li><a href="../orders/orders.html">📑 Quản lý đơn hàng</a></li>
+          <li><a href="../reports/reports.html">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTENT -->
+      <main class="content">
+        <h2>👤 Quản lý khách hàng</h2>
+
+        <!-- Menu chức năng -->
+        <div class="menu-box">
+          <button onclick="showUserSection('listUser')">
+            📋 Danh sách khách hàng
+          </button>
+          <button onclick="showUserSection('addUser')">
+            ➕ Thêm tài khoản
+          </button>
+          <button onclick="showUserSection('editUser')">
+            ✏️ Sửa khách hàng
+          </button>
+        </div>
+
+        <!-- Nội dung động -->
+        <div id="userContent">
+          <p class="default-message">
+            👉 Vui lòng chọn một chức năng để quản lý khách hàng.
+          </p>
+        </div>
+      </main>
     </div>
-  </header>
 
-  <div class="container">
-    <!-- SIDEBAR -->
-    <nav class="sidebar">
-      <ul>
-        <li><a href="../index.html">🏠 Trang chủ</a></li>
-        <li><a href="users.html" class="active">👤 Quản lý khách hàng</a></li>
-        <li><a href="../categories/list.html">🌸 Quản lý loại sản phẩm</a></li>
-        <li><a href="../products/list.html">🌹 Quản lý sản phẩm</a></li>
-        <li><a href="../imports/list.html">📦 Quản lý nhập hàng</a></li>
-        <li><a href="../orders/list.html">📑 Quản lý đơn hàng</a></li>
-        <li><a href="../reports/inventory.html">📊 Quản lý báo cáo</a></li>
-      </ul>
-    </nav>
+    <script>
+      function showUserSection(section) {
+        const content = document.getElementById("userContent");
 
-    <!-- CONTENT -->
-    <main class="content">
-      <!-- Menu chức năng -->
-      <div class="user-menu">
-        <button onclick="showSection('list')">📋 Danh sách khách hàng</button>
-        <button onclick="showSection('add')">➕ Thêm khách hàng</button>
-        <button onclick="showSection('edit')">✏️ Sửa khách hàng</button>
-      </div>
-
-      <!-- Khu vực hiển thị nội dung -->
-      <div id="userContent">
-        <p>👉 Vui lòng chọn một chức năng để quản lý khách hàng.</p>
-      </div>
-    </main>
-  </div>
-
-  <!-- Link tới file JS -->
-  <script src="../assets/js/users.js"></script>
-</body>
+        if (section === "listUser") {
+          // Không thực hiện gì, giữ nguyên thông báo mặc định
+          return;
+        } else if (section === "addUser") {
+          content.innerHTML = `
+          <h3>➕ Thêm tài khoản khách hàng</h3>
+          <form class="form-box">
+            <div><label>Tên tài khoản:</label><input type="text" required></div>
+            <div><label>Mật khẩu:</label><input type="password" required></div>
+            <div><label>Nhập lại mật khẩu:</label><input type="password" required></div>
+            <button type="submit">Tạo tài khoản</button>
+            <button type="reset">Hủy</button>
+          </form>
+        `;
+        } else if (section === "editUser") {
+          content.innerHTML = `
+          <h3>✏️ Sửa khách hàng</h3>
+          <form class="form-box">
+            <div><label>Tài khoản:</label><input type="text" value="user01" readonly></div>
+            <div><label>Tên:</label><input type="text" value="Nguyễn Văn A"></div>
+            <div><label>Email:</label><input type="email" value="a@example.com"></div>
+            <div><label>Trạng thái:</label>
+              <select><option>Hoạt động</option><option>Khóa</option></select>
+            </div>
+            <button type="submit">Lưu thay đổi</button>
+            <button type="reset">Hủy</button>
+          </form>
+        `;
+        }
+      }
+    </script>
+  </body>
 </html>

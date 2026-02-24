@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý đơn hàng</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/forms-tables.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="../logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- SIDEBAR -->
+      <nav class="sidebar">
+        <ul>
+          <li><a href="../index.html">🏠 Trang chủ</a></li>
+          <li><a href="../users/users.html">👤 Quản lý khách hàng</a></li>
+          <li><a href="../prices/prices.html">💰 Quản lý giá bán</a></li>
+          <li><a href="../products/products.html">🌹 Quản lý sản phẩm</a></li>
+          <li><a href="../imports/imports.html">📦 Quản lý nhập hàng</a></li>
+          <li><a href="orders.html" class="active">📑 Quản lý đơn hàng</a></li>
+          <li><a href="../reports/reports.html">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTENT -->
+      <main class="content">
+        <h2>📑 Quản lý đơn đặt hàng</h2>
+
+        <!-- Menu chức năng -->
+        <div class="menu-box">
+          <button onclick="showOrderSection('listOrder')">
+            📋 Danh sách đơn hàng
+          </button>
+          <button onclick="showOrderSection('updateStatus')">
+            🔖 Cập nhật trạng thái đơn
+          </button>
+          <button onclick="showOrderSection('filterOrders')">
+            🔍 Lọc đơn hàng
+          </button>
+        </div>
+
+        <!-- Nội dung động -->
+        <div id="orderContent">
+          <p class="default-message">
+            👉 Vui lòng chọn một chức năng để quản lý đơn hàng.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function showOrderSection(section) {
+        const content = document.getElementById("orderContent");
+
+        if (section === "listOrder") {
+          // 👉 Không thực hiện gì, giữ nguyên thông báo mặc định
+          return;
+        } else if (section === "updateStatus") {
+          content.innerHTML = `
+          <h3>🔖 Cập nhật trạng thái đơn hàng</h3>
+          <form class="form-box">
+            <div><label>Mã đơn hàng:</label><input type="text" required></div>
+            <div><label>Trạng thái mới:</label>
+              <select required>
+                <option value="new">Chưa xử lý</option>
+                <option value="confirmed">Đã xác nhận</option>
+                <option value="delivered">Đã giao thành công</option>
+                <option value="cancelled">Đã huỷ</option>
+              </select>
+            </div>
+            <p class="default-message">⚠️ Lưu ý: trạng thái đơn hàng chỉ cập nhật 1 chiều, không được quay lui.</p>
+            <button type="submit">Cập nhật trạng thái</button>
+            <button type="reset">Hủy</button>
+          </form>
+        `;
+        } else if (section === "filterOrders") {
+          content.innerHTML = `
+          <h3>🔍 Lọc đơn hàng</h3>
+          <form class="form-box">
+            <div><label>Từ ngày:</label><input type="date" required></div>
+            <div><label>Đến ngày:</label><input type="date" required></div>
+            <div><label>Tình trạng đơn hàng:</label>
+              <select>
+                <option value="all">Tất cả</option>
+                <option value="new">Chưa xử lý</option>
+                <option value="confirmed">Đã xác nhận</option>
+                <option value="delivered">Đã giao thành công</option>
+                <option value="cancelled">Đã huỷ</option>
+              </select>
+            </div>
+            <div><label>Sắp xếp theo địa chỉ giao hàng (phường):</label>
+              <input type="text" placeholder="Nhập tên phường">
+            </div>
+            <button type="submit">Lọc đơn hàng</button>
+            <button type="reset">Hủy</button>
+          </form>
+          <p class="default-message">👉 Kết quả lọc sẽ hiển thị danh sách đơn hàng, kèm đường link xem chi tiết từng đơn.</p>
+        `;
+        }
+      }
+    </script>
+  </body>
+</html>
