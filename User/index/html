@@ -7,7 +7,7 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- PREMIUM FONTS -->
+<!-- FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
@@ -17,9 +17,11 @@
 
 <div id="canvas-container"></div>
 
+<!-- NAVBAR -->
 <nav class="navbar navbar-dark fixed-top">
 <div class="container">
-<a class="navbar-brand fw-bold">SGU FLOWER</a>
+<a href="#" class="navbar-brand fw-bold">SGU FLOWER</a>
+
 <div class="d-flex border rounded-pill px-3 py-1 bg-dark">
 <small id="cart-text">Chào, Bạn | Giỏ hàng (0)</small>
 </div>
@@ -28,6 +30,7 @@
 
 <main class="container">
 
+<!-- HERO -->
 <section class="hero-section">
 <div>
 <h1>SGU Flower 3D</h1>
@@ -38,6 +41,7 @@ Khám phá ngay
 </div>
 </section>
 
+<!-- PRODUCTS -->
 <section id="products" class="py-5">
 
 <div class="glass-card p-4 mb-5">
@@ -63,6 +67,10 @@ placeholder="Tìm tên hoa...">
 
 <div class="row g-4">
 
+<!-- 12 PRODUCT CARDS -->
+<script>
+for(let i=1;i<=12;i++){
+document.write(`
 <div class="col-md-4">
 <div class="card glass-card product-card h-100 text-white p-3">
 
@@ -70,23 +78,26 @@ placeholder="Tìm tên hoa...">
 class="card-img-top rounded">
 
 <div class="card-body">
-<h5>Bó Hoa Ánh Trăng</h5>
-<p class="price">500.000đ</p>
+<h5>Bó Hoa Nghệ Thuật ${i}</h5>
+<p class="price">${400+i*20}.000đ</p>
 
 <div class="d-grid gap-2">
 <button class="btn btn-info btn-3d">Xoay 3D</button>
 <button class="btn btn-light add-cart">Thêm vào giỏ</button>
 </div>
-</div>
 
 </div>
 </div>
+</div>
+`);
+}
+</script>
 
 </div>
 </section>
 </main>
 
-<!-- 3D VIEWER -->
+<!-- VIEWER -->
 <div id="viewer3d" class="viewer3d hidden">
 <div id="viewer3d-canvas"></div>
 </div>
