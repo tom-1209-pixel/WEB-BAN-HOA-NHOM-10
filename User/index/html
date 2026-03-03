@@ -1,109 +1,256 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SGU Flower</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGU Flower - 3D Interactive Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 
 <body>
+  <canvas id="particles"></canvas>
 
-<div id="canvas-container"></div>
+  <nav>
+    <h1>SGU FLOWER</h1>
+    <ul>
+      <li><a href="#home">Trang chủ</a></li>
+      <li><a href="#explore">Bộ sưu tập</a></li>
+      <li><a href="#product">Sản phẩm</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span id="user-btn" class="nav-btn">Đăng nhập</span>
+      <div id="cart-btn" class="nav-btn">
+        🛒 Giỏ hàng <span id="cart-count">0</span>
+      </div>
+    </div>
+  </nav>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-dark fixed-top">
-<div class="container">
-<a href="#" class="navbar-brand fw-bold">SGU FLOWER</a>
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h2 class="hero-title">
+        <span class="subtitle">the hands of</span><br>
+        MIRACULOUS
+      </h2>
+      <div class="explore-wrapper">
+        <button class="explore-btn">EXPLORE</button>
+        <div class="arrow">↓</div>
+      </div>
+    </div>
+  </section>
 
-<div class="d-flex border rounded-pill px-3 py-1 bg-dark">
-<small id="cart-text">Chào, Bạn | Giỏ hàng (0)</small>
-</div>
-</div>
-</nav>
+  <section id="explore" class="section-container">
+    <div class="section-header fade-in">
+      <h2>Bộ Sưu Tập Bốn Mùa</h2>
+      <p>Câu chuyện thời gian qua những sắc hoa tinh tế nhất</p>
+    </div>
+    
+    <div class="cards-grid">
+      <div class="card fade-in" data-title="Spring Awakening" data-price="$65.00" data-desc="Sức sống mùa xuân với hoa Tulip và Cẩm Tú Cầu. Mang lại may mắn và những khởi đầu mới rực rỡ.">
+        <div class="img-wrapper">
+          <span class="card-badge">Best Seller</span>
+          <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1563241527-3004b7be0ffd');"></div>
+        </div>
+        <div class="card-info">
+          <h3>Spring Awakening</h3>
+          <p class="card-subtitle">Nàng Thơ Mùa Xuân</p>
+          <div class="card-bottom">
+            <span class="card-price">$65.00</span>
+            <div class="card-icon">+</div>
+          </div>
+        </div>
+      </div>
 
-<main class="container">
+      <div class="card fade-in" data-title="Summer Breeze" data-price="$45.00" data-desc="Tỏa nắng rực rỡ với Hướng Dương và Cúc Họa Mi. Biểu tượng của nhiệt huyết và tuổi thanh xuân.">
+        <div class="img-wrapper">
+          <span class="card-badge" style="background: #ffd700;">Hot</span>
+          <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1554631221-f9603e6808be');"></div>
+        </div>
+        <div class="card-info">
+          <h3>Summer Breeze</h3>
+          <p class="card-subtitle">Gió Mùa Hè Rực Rỡ</p>
+          <div class="card-bottom">
+            <span class="card-price">$45.00</span>
+            <div class="card-icon">+</div>
+          </div>
+        </div>
+      </div>
 
-<!-- HERO -->
-<section class="hero-section">
-<div>
-<h1>SGU Flower 3D</h1>
-<p class="lead">Trải nghiệm mua sắm hoa tươi trong không gian nghệ thuật</p>
-<a href="#products" class="btn btn-primary rounded-pill">
-Khám phá ngay
-</a>
-</div>
-</section>
+      <div class="card fade-in" data-title="Autumn Whisper" data-price="$55.00" data-desc="Giai điệu lãng mạn của mùa thu với sắc cam cháy và vàng Thạch Thảo. Món quà hoàn hảo để trao gửi yêu thương.">
+        <div class="img-wrapper">
+          <span class="card-badge" style="background: #ffb347;">Limited</span>
+          <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1540331547168-8b63109225b7');"></div>
+        </div>
+        <div class="card-info">
+          <h3>Autumn Whisper</h3>
+          <p class="card-subtitle">Lời Thì Thầm Mùa Thu</p>
+          <div class="card-bottom">
+            <span class="card-price">$55.00</span>
+            <div class="card-icon">+</div>
+          </div>
+        </div>
+      </div>
 
-<!-- PRODUCTS -->
-<section id="products" class="py-5">
+      <div class="card fade-in" data-title="Winter Sonata" data-price="$75.00" data-desc="Bản tình ca mùa đông kiêu sa với Tuyết Mai, Hồng Trắng và quả Thông Đỏ. Mang lại cảm giác bình yên, ấm áp.">
+        <div class="img-wrapper">
+          <span class="card-badge" style="background: #a1c4fd;">New</span>
+          <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1512413914441-591295b9b1e9');"></div>
+        </div>
+        <div class="card-info">
+          <h3>Winter Sonata</h3>
+          <p class="card-subtitle">Bản Tình Ca Mùa Đông</p>
+          <div class="card-bottom">
+            <span class="card-price">$75.00</span>
+            <div class="card-icon">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="glass-card p-4 mb-5">
-<form class="row g-3" onsubmit="return false;">
-<div class="col-md-5">
-<input class="form-control bg-transparent text-white"
-placeholder="Tìm tên hoa...">
-</div>
+  <section id="product" class="section-container">
+    <div class="section-header fade-in">
+      <h2>Danh Mục Sản Phẩm</h2>
+      <p>Khám phá các dòng hoa đặc trưng tại SGU Flower</p>
+    </div>
 
-<div class="col-md-4">
-<select class="form-select bg-transparent text-white">
-<option class="text-dark">Tất cả loại hoa</option>
-<option class="text-dark">Hoa Hồng</option>
-<option class="text-dark">Hoa Lan</option>
-</select>
-</div>
+    <div class="category-group fade-in">
+      <h3 class="category-title">Vương Quốc Hoa Hồng</h3>
+      <div class="cards-grid">
+        <div class="card fade-in" data-title="Red Romance" data-price="$40.00" data-desc="Hồng nhung đỏ thắm, biểu tượng của tình yêu mãnh liệt.">
+          <div class="img-wrapper">
+            <span class="card-badge">Hot</span>
+            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1548845971-ceb4e20794ce');"></div>
+          </div>
+          <div class="card-info">
+            <h3>Red Romance</h3>
+            <p class="card-subtitle">Hồng Nhung Đỏ Cổ Điển</p>
+            <div class="card-bottom">
+              <span class="card-price">$40.00</span>
+              <div class="card-icon">+</div>
+            </div>
+          </div>
+        </div>
 
-<div class="col-md-3">
-<button class="btn btn-primary w-100">Lọc sản phẩm</button>
-</div>
-</form>
-</div>
+        <div class="card fade-in" data-title="White Angel" data-price="$42.00" data-desc="Hồng trắng tinh khôi, vẻ đẹp thanh tao và thuần khiết.">
+          <div class="img-wrapper">
+            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23');"></div>
+          </div>
+          <div class="card-info">
+            <h3>White Angel</h3>
+            <p class="card-subtitle">Hồng Trắng Tinh Khôi</p>
+            <div class="card-bottom">
+              <span class="card-price">$42.00</span>
+              <div class="card-icon">+</div>
+            </div>
+          </div>
+        </div>
 
-<div class="row g-4">
+        <div class="card fade-in" data-title="Blue Eternity" data-price="$80.00" data-desc="Hồng xanh vĩnh cửu nhập khẩu. Đại diện cho những điều kỳ tích và tình yêu bất diệt.">
+          <div class="img-wrapper">
+            <span class="card-badge" style="background: #a1c4fd;">Premium</span>
+            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11');"></div>
+          </div>
+          <div class="card-info">
+            <h3>Blue Eternity</h3>
+            <p class="card-subtitle">Hồng Xanh Kỷ Băng Hà</p>
+            <div class="card-bottom">
+              <span class="card-price">$80.00</span>
+              <div class="card-icon">+</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- 12 PRODUCT CARDS -->
-<script>
-for(let i=1;i<=12;i++){
-document.write(`
-<div class="col-md-4">
-<div class="card glass-card product-card h-100 text-white p-3">
+    <div class="category-group fade-in">
+      <h3 class="category-title">Lan Hồ Điệp Thượng Lưu</h3>
+      <div class="cards-grid">
+        <div class="card fade-in" data-title="White Orchid" data-price="$120.00" data-desc="Chậu Lan Hồ Điệp trắng 5 cành sang trọng, phù hợp tặng đối tác, tân gia.">
+          <div class="img-wrapper">
+            <span class="card-badge">V.I.P</span>
+            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1515589053074-ce4eb8321db8');"></div>
+          </div>
+          <div class="card-info">
+            <h3>White Orchid</h3>
+            <p class="card-subtitle">Lan Hồ Điệp 5 Cành</p>
+            <div class="card-bottom">
+              <span class="card-price">$120.00</span>
+              <div class="card-icon">+</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<img src="https://via.placeholder.com/300x200"
-class="card-img-top rounded">
+  <footer>
+    © 2026 SGU Flower - 3D Interactive Space
+  </footer>
 
-<div class="card-body">
-<h5>Bó Hoa Nghệ Thuật ${i}</h5>
-<p class="price">${400+i*20}.000đ</p>
+  <div id="product-modal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <div class="modal-body">
+        <div class="modal-img"></div>
+        <div class="modal-info">
+          <h2 id="modal-title">Product Title</h2>
+          <p id="modal-desc">Product description goes here...</p>
+          <p id="modal-price" class="price">$0.00</p>
+          
+          <div class="quantity-control modal-qty">
+            <button class="qty-btn" id="modal-qty-minus">-</button>
+            <span class="qty-display" id="modal-qty-display">1</span>
+            <button class="qty-btn" id="modal-qty-plus">+</button>
+          </div>
 
-<div class="d-grid gap-2">
-<button class="btn btn-info btn-3d">Xoay 3D</button>
-<button class="btn btn-light add-cart">Thêm vào giỏ</button>
-</div>
+          <button class="add-to-cart">Thêm vào giỏ hàng</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-</div>
-</div>
-</div>
-`);
-}
-</script>
+  <div id="auth-modal" class="modal">
+    <div class="modal-overlay auth-overlay"></div>
+    <div class="modal-content auth-content">
+      <span class="close-btn auth-close">&times;</span>
+      <div class="auth-tabs">
+        <button class="tab-btn active" data-tab="login">Đăng Nhập</button>
+        <button class="tab-btn" data-tab="register">Đăng Ký</button>
+      </div>
+      
+      <form id="login-form" class="auth-form active">
+        <input type="text" id="login-user" placeholder="Tên đăng nhập" required>
+        <input type="password" id="login-pass" placeholder="Mật khẩu" required>
+        <button type="submit" class="submit-btn">Đăng Nhập Ngay</button>
+      </form>
 
-</div>
-</section>
-</main>
+      <form id="register-form" class="auth-form">
+        <input type="text" id="reg-user" placeholder="Tên đăng nhập" required>
+        <input type="password" id="reg-pass" placeholder="Mật khẩu" required>
+        <button type="submit" class="submit-btn">Tạo Tài Khoản</button>
+      </form>
+    </div>
+  </div>
 
-<!-- VIEWER -->
-<div id="viewer3d" class="viewer3d hidden">
-<div id="viewer3d-canvas"></div>
-</div>
+  <div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h2>Giỏ Hàng Của Bạn</h2>
+      <span class="close-cart">&times;</span>
+    </div>
+    <div class="cart-items" id="cart-items-container">
+      <p class="empty-cart">Giỏ hàng đang trống.</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">Tổng: <span id="total-price">$0.00</span></div>
+      <button class="checkout-btn">Thanh Toán Đơn Hàng</button>
+    </div>
+  </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
