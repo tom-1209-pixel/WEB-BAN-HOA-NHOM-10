@@ -1,14 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\TodoController;
 // resoucre
 
 // php arrtisan make:controller productController --resource 
 //product
-Route::get('product')
-Route:post('product')
-Route:put('product/{id}')
-Route:delete('product/{id}')
-
-Route:resource('product', [productController:class])
+Route::resource('todos', TodoController::class);
