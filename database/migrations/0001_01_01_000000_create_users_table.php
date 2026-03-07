@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations. SQL injection XSS  ::creat
+     * Run the migrations.
      */
     public function up(): void
     {
