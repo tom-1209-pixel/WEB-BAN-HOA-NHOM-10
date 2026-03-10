@@ -14,7 +14,7 @@ class TodoController extends Controller
     public function index(Request $request)
     {
         // Lấy user đã được middleware xác thực và gán vào request
-        $user = $request->get('user');
+        $user = $request->attributes->get('auth_user');
         
         // Chỉ lấy những todo của chính người đó
         $todos = Todo::where('user_id', $user->id)->get();
@@ -27,7 +27,7 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        $user = $request->get('user');
+        $user = $request->attributes->get('auth_user');
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -52,7 +52,7 @@ class TodoController extends Controller
      */
     public function show(Request $request, string $id)
     {
-        $user = $request->get('user');
+        $user = $request->attributes->get('auth_user');
         $todo = Todo::where('user_id', $user->id)->find($id);
 
         if (!$todo) {
@@ -67,7 +67,7 @@ class TodoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = $request->get('user');
+        $user = $request->attributes->get('auth_user');
         $todo = Todo::where('user_id', $user->id)->find($id);
 
         if (!$todo) {
@@ -92,7 +92,7 @@ class TodoController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
-        $user = $request->get('user');
+        $user = $request->attributes->get('auth_user');
         $todo = Todo::where('user_id', $user->id)->find($id);
 
         if (!$todo) {
