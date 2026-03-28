@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý đơn hàng | Flower Shop Admin</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/forms-tables.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="../logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <nav class="sidebar">
+        <ul>
+          <li><a href="../index.html">🏠 Trang chủ</a></li>
+          <li><a href="../users/users.html">👤 Quản lý người dùng</a></li>
+          <li><a href="../prices/prices.html">💰 Quản lý giá bán</a></li>
+          <li><a href="../products/products.html">🌹 Quản lý sản phẩm</a></li>
+          <li><a href="../imports/imports.html">📦 Quản lý nhập hàng</a></li>
+          <li><a href="orders.html" class="active">📑 Quản lý đơn hàng</a></li>
+          <li><a href="../reports/reports.html">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+    <main class="content">
+    <div id="orderListSection">
+        <div class="list-container" style="background:#fff; padding:20px; border-radius:8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h3 style="margin-bottom:20px; color:#2c3e50;">📑 QUẢN LÝ ĐƠN HÀNG</h3>
+            
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:15px; margin-bottom:20px; background:#f8f9fa; padding:15px; border-radius:8px; border: 1px solid #eee;">
+                <div>
+                    <label style="font-size:12px; font-weight:bold;">Từ ngày:</label>
+                    <input type="date" id="filterFromDate" class="form-control">
+                </div>
+                <div>
+                    <label style="font-size:12px; font-weight:bold;">Đến ngày:</label>
+                    <input type="date" id="filterToDate" class="form-control">
+                </div>
+                <div>
+                    <label style="font-size:12px; font-weight:bold;">Trạng thái:</label>
+                    <select id="filterStatus" class="form-control">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="pending">Chưa xử lý</option>
+                        <option value="confirmed">Đã xác nhận</option>
+                        <option value="delivered">Đã giao</option>
+                        <option value="cancelled">Đã hủy</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:12px; font-weight:bold;">Sắp xếp (Phường):</label>
+                    <select id="sortWard" class="form-control">
+                        <option value="">Mặc định</option>
+                        <option value="ASC">Phường (A-Z)</option>
+                        <option value="DESC">Phường (Z-A)</option>
+                    </select>
+                </div>
+                <div style="display:flex; align-items:flex-end;">
+                    <button onclick="loadOrders()" style="width:100%; padding:10px; background:#2ecc71; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">LỌC DỮ LIỆU</button>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#f1f1f1; border-bottom:2px solid #dee2e6; text-align: center;">
+                            <th style="padding:12px;">Mã đơn</th>
+                            <th style="padding:12px;">Ngày đặt</th>
+                            <th style="padding:12px;">Khách hàng</th>
+                            <th style="padding:12px;">Địa chỉ (Phường)</th>
+                            <th style="padding:12px;">Tổng tiền</th>
+                            <th style="padding:12px;">Trạng thái</th>
+                            <th style="padding:12px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="orderDetailSection" style="display: none;"></div>
+</main>
+    </div>
+
+    <script src="../assets/js/orders.js"></script>
+  </body>
+</html>

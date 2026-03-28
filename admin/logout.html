@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng xuất</title>
+</head>
+<body>
+
+  <script>
+    // Xóa trạng thái đăng nhập
+    localStorage.removeItem("admin_login");
+    localStorage.removeItem("admin_name");
+
+    // Chuyển về trang login
+    window.location.href = "login.html";
+  </script>
+
+</body>
+</html>

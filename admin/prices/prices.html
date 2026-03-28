@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý giá bán</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/forms-tables.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="../logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <nav class="sidebar">
+        <ul>
+          <li><a href="../index.html">🏠 Trang chủ</a></li>
+          <li><a href="../users/users.html">👤 Quản lý người dùng</a></li>
+          <li><a href="prices.html" class="active">💰 Quản lý giá bán</a></li>
+          <li><a href="../products/products.html">🌹 Quản lý sản phẩm</a></li>
+          <li><a href="../imports/imports.html">📦 Quản lý nhập hàng</a></li>
+          <li><a href="../orders/orders.html">📑 Quản lý đơn hàng</a></li>
+          <li><a href="../reports/reports.html">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <h2>💰 Quản lý giá bán</h2>
+
+        <div class="menu-box">
+    <button onclick="showSection('listPrice')">📋 Danh sách giá & tỉ lệ lợi nhuận</button>
+    <button onclick="showSection('lookupPrice')">📋 Danh sách giá theo phiếu nhập</button>
+</div>
+
+<div id="priceContent"></div>
+
+<script src="../assets/js/prices.js"></script>
+<script>
+    window.onload = function() {
+        if (typeof showSection === 'function') {
+            showSection('listPrice');
+        }
+    };
+</script>

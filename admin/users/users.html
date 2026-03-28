@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý khách hàng</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/forms-tables.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h2>🌸 Flower Shop Admin</h2>
+      <div class="admin-info">
+        Xin chào, <strong id="adminName">Admin</strong> |
+        <a href="../logout.html">Đăng xuất</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <nav class="sidebar">
+        <ul>
+          <li><a href="../index.html">🏠 Trang chủ</a></li>
+          <li><a href="users.html" class="active">👤 Quản lý người dùng</a></li>
+          <li><a href="../prices/prices.html">💰 Quản lý giá bán</a></li>
+          <li><a href="../products/products.html">🌹 Quản lý sản phẩm</a></li>
+          <li><a href="../imports/imports.html">📦 Quản lý nhập hàng</a></li>
+          <li><a href="../orders/orders.html">📑 Quản lý đơn hàng</a></li>
+          <li><a href="../reports/reports.html">📊 Quản lý báo cáo</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <h2>👤Quản lý người dùng</h2>
+
+        <div class="menu-box">
+          <button onclick="showUserSection('listUser')">
+            📋 Danh sách người dùng
+          </button>
+          <button onclick="showSection('addUser')">➕ Thêm tài khoản</button>
+        </div>
+
+        <div id="userContent">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>SĐT</th>
+                <th>Địa chỉ</th>
+                <th>Phường/Xã</th>
+                <th>Thành phố</th>
+                <th>Vai trò</th>
+                <th>Ngày tạo</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="10" style="text-align: center">
+                  Vui lòng chọn "Danh sách người dùng" để xem dữ liệu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+    <script src="../assets/js/users.js"></script>
+
+    <script>
+      // Hàm trung gian để điều hướng thống nhất
+      function showUserSection(section) {
+        showSection(section);
+      }
+
+      // Tự động tải danh sách khi vừa mở trang
+      window.onload = () => {
+        showSection("listUser");
+      };
+    </script>
+  </body>
+</html>
