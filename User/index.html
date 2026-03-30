@@ -471,31 +471,42 @@
             </div>
           </div>
 
-          <div class="checkout-step-modern">
+<div class="checkout-step-modern">
             <h3 class="step-title"><span class="step-num">3</span> Phương thức thanh toán</h3>
             <div class="radio-card-group">
+              
               <label class="radio-card">
-                <input type="radio" name="payment_method" value="cash" checked>
+                <input type="radio" name="payment_method" value="cash" onchange="togglePaymentDetails()" checked>
                 <div class="card-content">
                   <div class="card-icon"><i class="ph-light ph-money"></i></div>
                   <div class="card-details"><h4>Tiền mặt (COD)</h4></div>
                 </div>
               </label>
+
               <label class="radio-card">
-                <input type="radio" name="payment_method" value="online">
+                <input type="radio" name="payment_method" value="momo" onchange="togglePaymentDetails()">
                 <div class="card-content">
                   <div class="card-icon" style="color:#d82d8b;"><i class="ph-light ph-wallet"></i></div>
                   <div class="card-details"><h4 style="color:#d82d8b;">Ví MoMo</h4></div>
                 </div>
               </label>
+
               <label class="radio-card">
-                <input type="radio" name="payment_method" value="transfer">
+                <input type="radio" name="payment_method" value="transfer" onchange="togglePaymentDetails()">
                 <div class="card-content">
                   <div class="card-icon" style="color:#3498db;"><i class="ph-light ph-bank"></i></div>
                   <div class="card-details"><h4 style="color:#3498db;">Chuyển khoản</h4></div>
                 </div>
               </label>
+
             </div>
+
+            <div id="payment-details-box" style="display: none; margin-top: 20px; padding: 20px; background: rgba(255,182,193,0.05); border: 1px dashed #ffb6c1; border-radius: 12px; text-align: center; transition: 0.3s;">
+                <h4 style="color: #ffb6c1; margin-bottom: 10px; font-weight: 500;" id="payment-title">Thông tin thanh toán</h4>
+                <div id="payment-content" style="font-size: 14px; color: #ddd;">
+                    </div>
+            </div>
+
           </div>
 
         </div>

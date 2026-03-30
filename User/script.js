@@ -301,7 +301,48 @@ window.createPetals = function(x, y) {
   }
 }
 const formatVND = (price) => { return parseInt(price).toLocaleString('vi-VN') + 'đ'; };
+// ==========================================
+// CỖ MÁY QUÉT RỖNG TỰ ĐỘNG CHO TẤT CẢ CÁC FORM
+// ==========================================
+window.checkEmptyFields = function(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return true;
 
+    // Quét tất cả các ô nhập liệu (bỏ qua các ô ẩn, checkbox, hoặc ô tìm kiếm)
+    const inputs = container.querySelectorAll('input:not([type="hidden"]), select, textarea');
+    let isValid = true;
+
+    for (let i = 0; i < inputs.length; i++) {
+        let el = inputs[i];
+        
+        // Bỏ qua checkbox/radio và thanh tìm kiếm
+        if (el.type === 'checkbox' || el.type === 'radio') continue;
+        if (el.id === 'search-input' || el.id === 'price-min' || el.id === 'price-max' || el.id === 'main-nav-search') continue;
+
+        // KIỂM TRA RỖNG HOẶC CHƯA CHỌN SELECT
+        if (el.value.trim() === '') {
+            // Lấy tên ô bị trống để báo lỗi (Ưu tiên lấy Placeholder, nếu không có thì lấy Name)
+            let fieldName = el.getAttribute('placeholder') || el.name || 'ô dữ liệu';
+            
+            showCustomToast(`<i class="ph-light ph-warning-circle"></i> Vui lòng nhập ${fieldName}!`, "error");
+            
+            // Hiệu ứng chớp đỏ và tự động trỏ chuột vào ô bị trống
+            el.style.border = '2px solid #ff4757';
+            el.style.boxShadow = '0 0 10px rgba(255, 71, 87, 0.3)';
+            el.focus();
+            
+            // Tự động xóa viền đỏ khi khách bắt đầu gõ chữ vào
+            el.addEventListener('input', function() {
+                this.style.border = '';
+                this.style.boxShadow = '';
+            }, { once: true });
+
+            isValid = false;
+            break; // Chặn ngay ở ô lỗi đầu tiên, không báo lỗi hàng loạt
+        }
+    }
+    return isValid; // Trả về true nếu tất cả đều đã có chữ
+};
 /* =========================================
    6. AUTH LOGIC & DROPDOWN 
    ========================================= */
@@ -388,6 +429,7 @@ document.getElementById('logout-action')?.addEventListener('click', () => {
 
 document.getElementById('login-form')?.addEventListener('submit', async (e) => { 
   e.preventDefault(); 
+  if (!checkEmptyFields('login-form')) return;
   let btn = e.target.querySelector('button[type="submit"]') || e.target.querySelector('button');
   let originalText = btn ? btn.innerHTML : 'Đăng Nhập';
   try {
@@ -419,6 +461,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
 
 document.getElementById('register-form')?.addEventListener('submit', async (e) => { 
   e.preventDefault(); 
+  if (!checkEmptyFields('register-form')) return;
   let btn = e.target.querySelector('button[type="submit"]') || e.target.querySelector('button');
   let originalText = btn ? btn.innerHTML : 'Đăng Ký';
   try {
@@ -928,7 +971,9 @@ window.calculateOrderTotal = function() {
     }
     
     if(document.getElementById('summary-total')) document.getElementById('summary-total').textContent = formatVND(finalTotal);
-};
+// Cập nhật lại mã QR nếu khách đang bật tính năng Chuyển khoản
+    if (typeof togglePaymentDetails === 'function') togglePaymentDetails();
+  };
 
 window.openCheckoutModal = async () => {
   if (!cart.length) return showCustomToast("<i class='ph-light ph-shopping-cart' style='margin-right:8px; font-size: 18px; vertical-align: middle;'></i> Giỏ hàng trống! Hãy chọn hoa nhé.", "error");
@@ -986,6 +1031,76 @@ if (profileRes && profileRes.status === 'success') {
     if (checkoutBtn) { checkoutBtn.innerHTML = originalText; checkoutBtn.style.pointerEvents = 'auto'; }
   }
 };
+// ==========================================
+// HIỂN THỊ MÃ QR CHUYỂN KHOẢN / MOMO ĐỘNG
+// ==========================================
+window.togglePaymentDetails = function() {
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
+    const detailsBox = document.getElementById('payment-details-box');
+    const titleEl = document.getElementById('payment-title');
+    const contentEl = document.getElementById('payment-content');
+
+    if (!detailsBox) return; 
+
+    // Móc tổng tiền cuối cùng ra để nhét vào mã QR
+    let rawTotal = parseInt(document.getElementById('summary-total')?.textContent.replace(/\D/g, '') || 0);
+    let formattedTotal = formatVND(rawTotal);
+    
+    // Tự sinh mã đơn hàng tạm để làm nội dung chuyển khoản
+    let orderTempId = 'SGU' + Math.floor(Math.random() * 10000);
+
+    // Xử lý logic hiển thị
+    if (paymentMethod === 'banking' || paymentMethod === 'transfer') {
+        detailsBox.style.display = 'block';
+        titleEl.innerHTML = '<i class="ph-light ph-bank" style="font-size:20px; vertical-align:middle;"></i> Chuyển khoản Ngân hàng';
+        
+        // 🛑 SẾP SỬA THÔNG TIN NGÂN HÀNG CỦA SẾP VÀO ĐÂY:
+        let bankId = 'MB'; // Tên viết tắt NH (VD: Vietcombank, MB, Techcombank, ACB...)
+        let accountNo = '0123456789'; // Số tài khoản
+        let accountName = 'VUONG SANG'; // Tên chủ tài khoản không dấu
+        
+        // API VietQR tự động tạo mã QR có sẵn số tiền
+        let qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${rawTotal}&addInfo=${orderTempId}&accountName=${accountName}`;
+
+        contentEl.innerHTML = `
+            <p style="margin-bottom: 5px;">Ngân hàng: <strong style="color:#fff;">${bankId}</strong></p>
+            <p style="margin-bottom: 5px;">Chủ tài khoản: <strong style="color:#fff;">${accountName}</strong></p>
+            <p style="margin-bottom: 15px;">Số tài khoản: <strong style="color: #4cd137; font-size: 18px; letter-spacing: 1px;">${accountNo}</strong></p>
+            
+            <div style="background: #fff; padding: 10px; border-radius: 10px; display: inline-block; margin-bottom: 15px;">
+                <img src="${qrUrl}" alt="QR Ngân Hàng" style="width: 180px; height: 180px; object-fit: contain;">
+            </div>
+            
+            <p style="margin-bottom: 5px;">Số tiền: <strong style="color: #ffb6c1; font-size: 16px;">${formattedTotal}</strong></p>
+            <p style="font-size: 13px; color: #aaa;">Nội dung: <strong>${orderTempId}</strong></p>
+            <p style="font-size: 12px; color: #ff6b81; margin-top: 10px; font-style: italic;">* Vui lòng quét mã QR hoặc chuyển khoản đúng thông tin. Đơn hàng sẽ được xử lý sau khi nhận được thanh toán.</p>
+        `;
+
+    } else if (paymentMethod === 'momo') {
+        detailsBox.style.display = 'block';
+        titleEl.innerHTML = '<i class="ph-light ph-wallet" style="font-size:20px; vertical-align:middle;"></i> Thanh toán Ví MoMo';
+        
+        // 🛑 SẾP SỬA SĐT MOMO VÀO ĐÂY:
+        let momoPhone = '0909840611'; 
+        let momoName = 'VUONG';
+        
+        contentEl.innerHTML = `
+            <p style="margin-bottom: 5px;">Chủ tài khoản: <strong style="color:#fff;">${momoName}</strong></p>
+            <p style="margin-bottom: 15px;">Số điện thoại: <strong style="color: #a50064; font-size: 18px; letter-spacing: 1px;">${momoPhone}</strong></p>
+            
+            <div style="background: #fff; padding: 10px; border-radius: 10px; display: inline-block; margin-bottom: 15px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="Mã QR MoMo" style="width: 150px; height: 150px; opacity: 0.5;">
+            </div>
+            
+            <p style="margin-bottom: 5px;">Số tiền: <strong style="color: #ffb6c1; font-size: 16px;">${formattedTotal}</strong></p>
+            <p style="font-size: 13px; color: #aaa;">Nội dung: <strong>${orderTempId}</strong></p>
+        `;
+    } else {
+        // Nếu chọn Tiền mặt (COD) thì giấu đi
+        detailsBox.style.display = 'none';
+        contentEl.innerHTML = '';
+    }
+};
 
 /* =========================================
    11. XỬ LÝ THANH TOÁN & ĐẶT HÀNG (BẢN CHUẨN TỰ ĐỘNG BỐC ĐỊA CHỈ)
@@ -995,6 +1110,12 @@ window.handleOrderSubmit = async function(e) {
     
     const submitBtn = document.querySelector('#final-checkout-form .submit-btn-modern') || document.querySelector('#final-checkout-form .submit-btn');
     const originalText = submitBtn ? submitBtn.innerHTML : 'XÁC NHẬN ĐẶT HÀNG';
+    const radioNew = document.querySelector('input[name="address_type"][value="new"]');
+    if (radioNew && radioNew.checked) {
+        if (!checkEmptyFields('new-address-form')) {
+            return; // Ngưng đặt hàng ngay lập tức nếu ô nhập địa chỉ bị rỗng
+        }
+    }
     if (submitBtn) { submitBtn.innerHTML = '<i class="ph-light ph-spinner fa-spin"></i> Đang xử lý...'; submitBtn.style.pointerEvents = 'none'; }
 
     try {
@@ -1126,57 +1247,27 @@ window.handleOrderSubmit = async function(e) {
     }
 };
 
-window.toggleAddress = function() {
-    const addressForm = document.getElementById('new-address-form');
-    const radioNew = document.querySelector('input[name="address_type"][value="new"]');
-    if (addressForm && radioNew) { addressForm.style.display = radioNew.checked ? 'flex' : 'none'; }
-};
-
-window.togglePreorder = function() {
-    const timeBox = document.getElementById('preorder-time-box');
-    const selectedMethod = document.querySelector('input[name="shipping_method"]:checked')?.value;
-    if (timeBox) { timeBox.style.display = selectedMethod === 'preorder' ? 'block' : 'none'; }
-    if (typeof calculateOrderTotal === 'function') calculateOrderTotal();
-};
-
-window.togglePreorder = function() {
-    const timeBox = document.getElementById('preorder-time-box');
-    const selectedMethod = document.querySelector('input[name="shipping_method"]:checked')?.value;
-    
-    if (timeBox) { timeBox.style.display = selectedMethod === 'preorder' ? 'block' : 'none'; }
-    
-    // GỌI HÀM CỘNG TIỀN MỖI KHI ĐỔI PHƯƠNG THỨC GIAO HÀNG
-    calculateOrderTotal();
-};
-
-
 // Hàm ẩn/hiện form nhập địa chỉ mới (Viết lại cho chắc cốp 100%)
 window.toggleAddress = function() {
     const addressForm = document.getElementById('new-address-form');
     const radioNew = document.querySelector('input[name="address_type"][value="new"]');
     
     if (addressForm && radioNew) {
-        // Đảm bảo dùng flex để không làm vỡ layout cái form
         addressForm.style.display = radioNew.checked ? 'flex' : 'none';
     }
 };
-// 2. Hàm ẩn/hiện ô chọn giờ giao hàng & tính lại phí ship
+
+// Hàm ẩn/hiện ô chọn giờ giao hàng & tính lại phí ship
 window.togglePreorder = function() {
     const timeBox = document.getElementById('preorder-time-box');
-    // Lấy phương thức giao hàng đang được chọn
-    const selectedMethod = document.querySelector('input[name="shipping_method"]:checked').value;
+    const selectedMethod = document.querySelector('input[name="shipping_method"]:checked')?.value;
     
     if (timeBox) {
-        // Nếu chọn 'preorder' (đặt trước) thì hiện cái lịch ra
         timeBox.style.display = selectedMethod === 'preorder' ? 'block' : 'none';
     }
     
-    // Gọi hàm tính lại tổng tiền (để nếu giao hỏa tốc thì nó tự cộng phí ship)
-    if (typeof calculateOrderTotal === 'function') {
-        calculateOrderTotal();
-    }
+    if (typeof calculateOrderTotal === 'function') calculateOrderTotal();
 };
-
 
 /* =========================================
    12. KHỞI CHẠY (INITIALIZATION) & SETTINGS
