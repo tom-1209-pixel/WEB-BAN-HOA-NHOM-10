@@ -38,3 +38,11 @@ Route::get('/home', [HomeController::class, 'home']);
 Route::get('/products/create', function () {
     return view('product-form');
 });
+
+// --------------------------------------------------
+// Trang demo Chatbot AI - GET /chatbot
+// URL: http://localhost:8080/chatbot
+// --------------------------------------------------
+Route::get('/chatbot', function () {
+    return view('chatbot');
+});

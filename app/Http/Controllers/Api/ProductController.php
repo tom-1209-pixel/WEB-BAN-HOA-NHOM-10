@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\ProductStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AdminProductResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProductController extends Controller
 {
@@ -14,7 +17,7 @@ class ProductController extends Controller
      * GET /api/products — Public.
      * Chỉ trả về sản phẩm visible, hỗ trợ filter và tìm kiếm.
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): AnonymousResourceCollection
     {
         $query = Product::with('category:id,name')
             ->visible();
@@ -44,13 +47,14 @@ class ProductController extends Controller
         $perPage   = min((int) $request->get('per_page', 12), 100);
         $products  = $query->paginate($perPage);
 
-        return response()->json($products);
+        // Dùng ProductResource: giấu giá nhập, tồn kho cụ thể cho end-user
+        return ProductResource::collection($products);
     }
 
     /**
      * GET /api/products/{id} — Public.
      */
-    public function show(int $id): JsonResponse
+    public function show(int $id): ProductResource|JsonResponse
     {
         $product = Product::with('category:id,name')->find($id);
 
@@ -58,7 +62,8 @@ class ProductController extends Controller
             return response()->json(['message' => 'Sản phẩm không tồn tại'], 404);
         }
 
-        return response()->json(['data' => $product]);
+        // Dùng ProductResource cho end-user
+        return new ProductResource($product);
     }
 
     /**
@@ -83,9 +88,10 @@ class ProductController extends Controller
         $product->recalculateSellingPrice();
         $product->save();
 
+        // Admin tạo sản phẩm --> dùng AdminProductResource hiển thị đầy đủ
         return response()->json([
             'message' => 'Tạo sản phẩm thành công',
-            'data'    => $product->load('category:id,name'),
+            'data'    => new AdminProductResource($product->load('category:id,name')),
         ], 201);
     }
 
@@ -122,7 +128,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Cập nhật sản phẩm thành công',
-            'data'    => $product->fresh('category:id,name'),
+            'data'    => new AdminProductResource($product->fresh('category:id,name')),
         ]);
     }
 

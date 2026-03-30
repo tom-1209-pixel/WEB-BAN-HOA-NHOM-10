@@ -25,3 +25,5 @@ Thumbs.db
 
 *.json   
 *.md
+
+/postman/*

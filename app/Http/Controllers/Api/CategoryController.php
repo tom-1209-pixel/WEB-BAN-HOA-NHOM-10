@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ class CategoryController extends Controller
     /**
      * GET /api/categories
      * Lấy danh sách tất cả danh mục.
+     * MVC = 
      */
     public function index(): JsonResponse
     {
@@ -19,7 +21,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'    => $categories,
+            'data'    => CategoryResource::collection($categories),
         ]);
     }
 
@@ -39,7 +41,7 @@ class CategoryController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Tạo danh mục thành công',
-            'data'    => $category,
+            'data'    => new CategoryResource($category),
         ], 201);
     }
 
@@ -60,7 +62,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'    => $category,
+            'data'    => new CategoryResource($category),
         ]);
     }
 
@@ -89,7 +91,7 @@ class CategoryController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Cập nhật danh mục thành công',
-            'data'    => $category,
+            'data'    => new CategoryResource($category),
         ]);
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\SupplierController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TodoController;
 use App\Http\Controllers\Api\UserController;
@@ -26,6 +27,14 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
+
+// Chatbot AI (public — guest có thể chat không cần đăng nhập)
+Route::prefix('chat')->group(function () {
+    Route::post('/conversations', [ChatController::class, 'startConversation']);
+    Route::get('/conversations/{id}', [ChatController::class, 'showConversation']);
+    Route::post('/conversations/{id}/messages', [ChatController::class, 'sendMessage']);
+});
+
 
 // ==============================================================
 // AUTH REQUIRED — Bất kỳ role nào đã đăng nhập
@@ -56,6 +65,10 @@ Route::middleware('auth.simple')->group(function () {
     Route::get('/todos/{id}', [TodoController::class, 'show']);
     Route::put('/todos/{id}', [TodoController::class, 'update']);
     Route::delete('/todos/{id}', [TodoController::class, 'destroy']);
+
+    // --- Chatbot AI (lịch sử hội thoại — cần đăng nhập) ---
+    Route::get('/chat/conversations', [ChatController::class, 'listConversations']);
+    Route::delete('/chat/conversations/{id}', [ChatController::class, 'deleteConversation']);
 });
 
 // ==============================================================

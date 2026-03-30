@@ -35,4 +35,24 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google Gemini AI
+    |--------------------------------------------------------------------------
+    |
+    | Cấu hình kết nối với Google Gemini API cho tính năng chatbot.
+    | Lấy API key miễn phí tại: https://aistudio.google.com/apikey
+    |
+    | Các model khả dụng:
+    |   - gemini-2.0-flash  : nhanh, miễn phí, phù hợp chatbot
+    |   - gemini-2.5-flash  : cân bằng tốc độ/chất lượng
+    |   - gemini-2.5-pro    : chất lượng cao nhất
+    |
+    */
+    'gemini' => [
+        'api_key'  => env('GEMINI_API_KEY'),
+        'model'    => env('GEMINI_MODEL', 'gemini-2.0-flash'),
+        'api_url'  => env('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta'),
+    ],
+
 ];
