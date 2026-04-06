@@ -7,7 +7,6 @@ $action = $_GET['action'] ?? '';
 $input = json_decode(file_get_contents("php://input"), true) ?? $_POST;
 
 // ================= HELPER =================
-// ================= HELPER =================
 function formatUser($user) {
     return [
         'username'  => $user['username'] ?? '',
@@ -46,20 +45,29 @@ function getUserFromToken($pdo) {
 // ================= ROUTE =================
 try {
     switch ($action) {
-case 'register':
+        case 'register':
             if (empty($input['email']) || empty($input['password'])) {
                 echo json_encode(['status' => 'error', 'message' => 'Thiếu email hoặc mật khẩu']); exit;
             }
             $email = $input['email'];
             $password = password_hash($input['password'], PASSWORD_BCRYPT);
-            
-            // 1. BẮT LẤY USERNAME TỪ FRONTEND GỬI XUỐNG
             $username = $input['username'] ?? '';
 
-            $stmtCheck = $pdo->prepare("SELECT email FROM users WHERE email = ?");
-            $stmtCheck->execute([$email]);
-            if ($stmtCheck->rowCount() > 0) {
-                echo json_encode(['status' => 'error', 'message' => 'Email này đã được đăng ký!']); exit;
+            $phoneCheck = !empty($input['phone']) ? $input['phone'] : 'NO_PHONE_999999';
+            $stmtCheck = $pdo->prepare("SELECT email, username, phone FROM users WHERE email = ? OR username = ? OR phone = ?");
+            $stmtCheck->execute([$email, $username, $phoneCheck]);
+            $existUser = $stmtCheck->fetch();
+            
+            if ($existUser) {
+                if ($existUser['email'] === $email) {
+                    echo json_encode(['status' => 'error', 'message' => 'Email này đã được đăng ký!']); exit;
+                }
+                if ($existUser['username'] === $username) {
+                    echo json_encode(['status' => 'error', 'message' => 'Tên đăng nhập này đã có người sử dụng!']); exit;
+                }
+                if (!empty($input['phone']) && $existUser['phone'] === $input['phone']) {
+                    echo json_encode(['status' => 'error', 'message' => 'Số điện thoại này đã được đăng ký!']); exit;
+                }
             }
 
             $address = $input['address'] ?? '';
@@ -67,7 +75,6 @@ case 'register':
             $gender = $input['gender'] ?? 'nam'; 
             
             try {
-                // 2. NHÉT THÊM CỘT `username` VÀO CÂU LỆNH INSERT
                 $sql = "INSERT INTO users (username, email, password, full_name, phone, address, ward, district, city, gender, role, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'customer', 'active', NOW())";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([$username, $email, $password, $input['full_name'] ?? '', $input['phone'] ?? '', $address, $input['ward'] ?? '', $district, $input['city'] ?? '', $gender]);
@@ -79,11 +86,10 @@ case 'register':
             echo json_encode(['status' => 'success', 'message' => 'Đăng ký thành công']);
             break;
 
-case 'login':
+        case 'login':
             $login = $input['login'] ?? '';
             $password = $input['password'] ?? '';
             
-            // 3. SỬA CÂU LỆNH TÌM KIẾM: CHO PHÉP QUÉT CẢ EMAIL HOẶC USERNAME
             $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR username = ? LIMIT 1");
             $stmt->execute([$login, $login]);
             $user = $stmt->fetch();
@@ -111,41 +117,81 @@ case 'login':
             $user = getUserFromToken($pdo);
             if (!$user) { echo json_encode(['status' => 'error', 'message' => 'Vui lòng đăng nhập lại']); exit; }
 
+            // 1. KIỂM TRA ĐỊNH DẠNG SỐ ĐIỆN THOẠI (10 số, đầu số VN)
+            $newPhone = $input['phone'] ?? $user['phone'];
+            if (!preg_match('/^(0[35789])[0-9]{8}$/', $newPhone)) {
+                echo json_encode(['status' => 'error', 'message' => 'Số điện thoại không hợp lệ (Phải có 10 chữ số)!']);
+                exit;
+            }
+
+            // 2. KIỂM TRA TRÙNG SỐ ĐIỆN THOẠI
+            if ($newPhone !== $user['phone']) {
+                $checkPhone = $pdo->prepare("SELECT email FROM users WHERE phone = ?");
+                $checkPhone->execute([$newPhone]);
+                if ($checkPhone->rowCount() > 0) {
+                    echo json_encode(['status' => 'error', 'message' => 'Số điện thoại này đã được liên kết với một tài khoản khác!']);
+                    exit;
+                }
+            }
+
+            // 3. KIỂM TRA TRÙNG USERNAME (Nếu người dùng thay đổi username)
+            $newUsername = $input['username'] ?? $user['username'];
+            if ($newUsername !== $user['username']) {
+                $checkUser = $pdo->prepare("SELECT email FROM users WHERE username = ?");
+                $checkUser->execute([$newUsername]);
+                if ($checkUser->rowCount() > 0) {
+                    echo json_encode(['status' => 'error', 'message' => 'Tên đăng nhập này đã có người sử dụng!']);
+                    exit;
+                }
+            }
+
             $address = $input['address'] ?? $user['address'];
             $district = $input['district'] ?? ($user['district'] ?? '');
             $gender = $input['gender'] ?? ($user['gender'] ?? 'nam');
 
             try {
-                $sql = "UPDATE users SET full_name = ?, phone = ?, address = ?, ward = ?, district = ?, city = ?, gender = ? WHERE email = ?";
+                // CÂU LỆNH UPDATE: Cập nhật username, KHÔNG cập nhật full_name
+                $sql = "UPDATE users SET username = ?, phone = ?, address = ?, ward = ?, district = ?, city = ?, gender = ? WHERE email = ?";
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$input['full_name'] ?? $user['full_name'], $input['phone'] ?? $user['phone'], $address, $input['ward'] ?? $user['ward'], $district, $input['city'] ?? $user['city'], $gender, $user['email']]);
+                $stmt->execute([$newUsername, $newPhone, $address, $input['ward'] ?? $user['ward'], $district, $input['city'] ?? $user['city'], $gender, $user['email']]);
             } catch (Exception $e) {
-                $sql = "UPDATE users SET full_name = ?, phone = ?, address = ?, ward = ?, city = ?, gender = ? WHERE email = ?";
+                $sql = "UPDATE users SET username = ?, phone = ?, address = ?, ward = ?, city = ?, gender = ? WHERE email = ?";
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$input['full_name'] ?? $user['full_name'], $input['phone'] ?? $user['phone'], $address . ($district ? ', ' . $district : ''), $input['ward'] ?? $user['ward'], $input['city'] ?? $user['city'], $gender, $user['email']]);
+                $stmt->execute([$newUsername, $newPhone, $address . ($district ? ', ' . $district : ''), $input['ward'] ?? $user['ward'], $input['city'] ?? $user['city'], $gender, $user['email']]);
             }
-            echo json_encode(['status' => 'success', 'message' => 'Cập nhật thành công']);
+            // Trả về thêm username mới để Frontend cập nhật localStorage
+            echo json_encode(['status' => 'success', 'message' => 'Cập nhật hồ sơ thành công', 'new_username' => $newUsername]);
             break;
 
         case 'forgot_password':
             $login = $input['login'] ?? '';
-            
-            // SỬA 2 DÒNG NÀY ĐỂ TÌM ĐƯỢC CẢ EMAIL HOẶC USERNAME
-            $stmt = $pdo->prepare("SELECT email FROM users WHERE email = ? OR username = ?");
+            $stmt = $pdo->prepare("SELECT email, username FROM users WHERE email = ? OR username = ?");
             $stmt->execute([$login, $login]);
             $user = $stmt->fetch();
 
             if ($user) {
-                $updateReq = $pdo->prepare("UPDATE users SET reset_required = 'yes' WHERE email = ?");
-                $updateReq->execute([$user['email']]);
-                
-                echo json_encode(['status' => 'success', 'message' => 'Yêu cầu đã được gửi đến Admin!']);
+                try {
+                    $pdo->beginTransaction();
+                    $updateReq = $pdo->prepare("UPDATE users SET reset_required = 'yes' WHERE email = ?");
+                    $updateReq->execute([$user['email']]);
+                    
+                    $title = "Yêu cầu cấp lại mật khẩu";
+                    $message = "Khách hàng có Username là [ " . $user['username'] . " ] đã quên mật khẩu và yêu cầu cấp lại. Vui lòng kiểm tra và duyệt yêu cầu.";
+                    
+                    $insertNotif = $pdo->prepare("INSERT INTO admin_notifications (user_email, title, message) VALUES (?, ?, ?)");
+                    $insertNotif->execute([$user['email'], $title, $message]);
+
+                    $pdo->commit();
+                    echo json_encode(['status' => 'success', 'message' => 'Yêu cầu đã được gửi đến Admin thành công!']);
+                } catch (Exception $e) {
+                    $pdo->rollBack();
+                    echo json_encode(['status' => 'error', 'message' => 'Lỗi hệ thống: Không thể gửi yêu cầu!']);
+                }
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Tài khoản không tồn tại trong hệ thống!']);
             }
             break;
 
-        // API DÀNH CHO ADMIN BẤM NÚT KHỞI TẠO MẬT KHẨU
         case 'admin_reset_password':
             $email = $input['email'] ?? '';
             $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
@@ -159,7 +205,6 @@ case 'login':
                     $newPass = password_hash('123456', PASSWORD_BCRYPT);
                     $update = $pdo->prepare("UPDATE users SET password = ?, reset_required = 'yes' WHERE email = ?");
                     $update->execute([$newPass, $email]);
-                    
                     echo json_encode(['status' => 'success', 'message' => 'Đã khởi tạo mật khẩu về 123456 thành công!']);
                 }
             } else {
@@ -167,7 +212,6 @@ case 'login':
             }
             break;
 
-        // API DÀNH CHO KHÁCH LƯU MẬT KHẨU MỚI TẠI MÀN HÌNH ĐĂNG NHẬP
         case 'force_change_password':
             $email = $input['email'];
             $newPassword = $input['new_password'];
@@ -175,11 +219,9 @@ case 'login':
 
             $stmt = $pdo->prepare("UPDATE users SET password = ?, reset_required = 'no' WHERE email = ?");
             $stmt->execute([$hashedPass, $email]);
-            
             echo json_encode(['status' => 'success', 'message' => 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.']);
             break;
-
-    } // Đây là dấu đóng ngoặc CHUẨN của switch ($action)
+    }
 } catch (Exception $e) {
     echo json_encode(['status' => 'error', 'message' => 'Lỗi Database: ' . $e->getMessage()]);
 }

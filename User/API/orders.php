@@ -82,9 +82,8 @@ try {
             $total = floatval($input['total_price'] ?? 0);
             
             // TRỊ BỆNH LỆCH ENUM THANH TOÁN
-            $raw_pay = strtolower(trim($input['payment_method'] ?? 'cash'));
-            $pay_method = ($raw_pay === 'cod' || $raw_pay === 'cash') ? 'cash' : 'bank_transfer';
-
+            // Bỏ ép kiểu, lấy trực tiếp phương thức thanh toán từ JS truyền lên (cash, online, transfer)
+            $pay_method = strtolower(trim($input['payment_method'] ?? 'cash'));
             try {
                 $sqlOrder = "INSERT INTO orders (order_id, customer_email, order_date, delivery_name, delivery_phone, delivery_address, delivery_ward, delivery_city, payment_method, payment_status, order_status, total_price) 
                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'unpaid', 'pending', ?)";

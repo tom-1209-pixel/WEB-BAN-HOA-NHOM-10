@@ -1,42 +1,41 @@
 <?php
-// api/products.php
-require_once "connect.php";
+// BÙA VƯỢT TƯỜNG LỬA & CHỐNG CACHE
+header('Content-Type: application/json; charset=utf-8');
+header("Access-Control-Allow-Origin: *");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
 
-$action = $_GET['action'] ?? 'index';
+require_once "connect.php";
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 try {
-    if ($action === 'index') {
-        // Chỉ lấy hoa có status là 'selling' (đang bán)
-        $sql = "SELECT p.*, c.category_name 
-                FROM products p 
-                LEFT JOIN categories c ON p.category_id = c.category_id 
-                WHERE p.status = 'selling' 
-                ORDER BY p.created_at DESC";
-        $raw_data = $pdo->query($sql)->fetchAll();
-        
-        $formatted_data = [];
-        foreach ($raw_data as $row) {
-            $img = $row['image'] ?? '';
+    // 🚀 LỆNH SQL THẦN THÁNH: Gom tất cả mã danh mục của 1 bông hoa thành 1 chuỗi
+    $sql = "SELECT p.*, GROUP_CONCAT(pc.category_id) as multi_categories 
+            FROM products p 
+            LEFT JOIN product_categories pc ON p.product_id = pc.product_id 
+            GROUP BY p.product_id";
             
-            // Máy lọc ảnh sửa link localhost thành link xịn
-            $img = str_replace('http://localhost/admin/', 'https://a10.nhahodau.net/admin/', $img);
-            if (!empty($img) && !preg_match('/^http/', $img)) {
-                $img = 'https://a10.nhahodau.net/admin/' . ltrim($img, '/');
-            }
-            
-            $row['image_url'] = $img;
-            $formatted_data[] = $row;
-        }
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo json_encode([
-            'status' => 'success', 
-            'success' => true, 
-            'data' => $formatted_data
-        ]);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Not found']);
+    // Chế biến lại data cho Javascript dễ đọc
+    foreach ($products as &$p) {
+        // Biến chuỗi 'tuoi,tuoi-bo,gia-500k' thành mảng ['tuoi', 'tuoi-bo', 'gia-500k']
+        if (!empty($p['multi_categories'])) {
+            $p['categories'] = explode(',', $p['multi_categories']);
+        } else {
+            // Cứu cánh: Nếu hoa nào quên nhập danh mục phụ thì lấy tạm danh mục chính
+            $p['categories'] = [$p['category_id']];
+        }
+        
+        // Bẻ gãy đuôi thập phân của SQL cho giá tiền tròn trịa
+        $p['price'] = (int)$p['price'];
     }
-} catch (Exception $e) { 
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]); 
+
+    echo json_encode(['status' => 'success', 'data' => $products]);
+
+} catch (Exception $e) {
+    echo json_encode(['status' => 'error', 'message' => 'LỖI DB SẢN PHẨM: ' . $e->getMessage()]);
 }
 ?>
